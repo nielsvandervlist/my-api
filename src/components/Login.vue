@@ -15,6 +15,7 @@
 <script>
 
 import PostsService from '@/services/PostsService'
+import store from '@/store/index'
 // import {AUTH_REQUEST} from '../store/actions/auth'
 
 export default{
@@ -31,6 +32,8 @@ export default{
         email: this.email,
         password: this.password
       })
+
+      this.$store.commit('setUser', this.name);
       this.$router.push({ name: 'Posts' })
     }
   }
