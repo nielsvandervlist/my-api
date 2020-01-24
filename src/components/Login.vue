@@ -41,6 +41,7 @@ export default{
         this.$router.push({ name: 'Posts' })
       }, function (err) {
         // Error handeling here
+        console.log(err)
       })
     }
   }

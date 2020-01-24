@@ -20,11 +20,19 @@ export default {
     return {
       name: '',
       email: '',
-      pass: ''
+      pass: '',
+      is_admin: null
     }
   },
   methods: {
     async Authenticate () {
+      let data = {
+        name: this.name,
+        email: this.email,
+        password: this.password,
+        is_admin: this.is_admin
+      }
+      this.$storestore.dispatch('register', data)
       await PostsService.Auth({
         name: this.name,
         email: this.email,

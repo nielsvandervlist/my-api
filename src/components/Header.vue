@@ -5,7 +5,8 @@
         <router-link to="/hello"></router-link>
       </li>
       <li>
-        <span class="logout">Logout</span>
+        <router-link to="/posts">Posts</router-link>
+        <span v-if="isLoggedIn"> | <a @click="logout">Logout</a></span>
       </li>
       <li>
         <router-link to="/login">Login</router-link>
@@ -37,6 +38,17 @@
 export default {
   data () {
     return {
+    }
+  },
+  computed: {
+    isLoggedIn: function () { return this.$store.getters.isLoggedIn }
+  },
+  methods: {
+    logout: function () {
+      this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push('/login')
+        })
     }
   }
 }
