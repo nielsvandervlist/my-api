@@ -15,7 +15,6 @@
 <script>
 
 import PostsService from '@/services/PostsService'
-import store from '@/store/index'
 // import {AUTH_REQUEST} from '../store/actions/auth'
 
 export default{
@@ -27,14 +26,22 @@ export default{
   },
   methods: {
     login: async function () {
+      // Set vars
+      let email = this.email
+      let password = this.password
+      this.$store.dispatch('login', { email, password })
+      // Post login to API
       await PostsService.login({
-        name: this.name,
-        email: this.email,
-        password: this.password
+        name: email,
+        email: email,
+        password: password
+        // Results are fine
+      }).then(function (results) {
+        // Push router to posts
+        this.$router.push({ name: 'Posts' })
+      }, function (err) {
+        // Error handeling here
       })
-
-      this.$store.commit('setUser', this.name);
-      this.$router.push({ name: 'Posts' })
     }
   }
 }
