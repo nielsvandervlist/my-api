@@ -40,7 +40,10 @@ const $router = new Router({
     {
       path: '/posts',
       name: 'Posts',
-      component: Posts
+      component: Posts,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/posts/new',
