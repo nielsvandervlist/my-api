@@ -157,7 +157,8 @@ app.post('/users/login', (req, res) => {
         if (result) {
           res.send({
             success: true,
-            message: 'Login successfully!'
+            user: user,
+            token: 'test'
           })
         } else {
           res.send({

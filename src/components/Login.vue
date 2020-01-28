@@ -30,12 +30,8 @@ export default{
       let email = this.email
       let password = this.password
       this.$store.dispatch('login', { email, password })
-        .then(function (results) {
-          this.$router.push({ name: 'Posts' })
-          console.log(results)
-        }, function (err) {
-          console.log(err)
-        })
+        .then(() => this.$router.push('/'))
+        .catch(err => console.log(err))
       // Push router to posts
       // Post login to API
       // await PostsService.login({
