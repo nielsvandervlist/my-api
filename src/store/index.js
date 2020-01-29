@@ -33,7 +33,6 @@ export default new Vuex.Store({
         commit('auth_request')
         axios({url: 'http://localhost:8081/users/login', data: user, method: 'POST'})
           .then(resp => {
-            console.log(resp)
             const token = resp.data.token
             const user = resp.data.user
             console.log(user)
@@ -51,20 +50,18 @@ export default new Vuex.Store({
     },
     register ({commit}, user) {
       return new Promise((resolve, reject) => {
+        console.log(user)
         commit('auth_request')
         // eslint-disable-next-line standard/object-curly-even-spacing
-        axios({url: 'http://localhost:8081/user/create', data: user, method: 'POST' })
+        axios({url: 'http://localhost:8081/users/create', data: user, method: 'POST' })
           .then(resp => {
-            const token = resp.data.token
+            console.log(resp)
             const user = resp.data.user
-            localStorage.setItem('token', token)
-            axios.defaults.headers.common['Authorization'] = token
-            commit('auth_success', token, user)
+            commit('auth_success', user)
             resolve(resp)
           })
           .catch(err => {
             commit('auth_error', err)
-            localStorage.removeItem('token')
             reject(err)
           })
       })

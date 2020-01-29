@@ -7,13 +7,13 @@
       </li>
       <li>
         <router-link to="/posts">Posts</router-link>
+      </li>
+      <li>
+        <router-link v-if="!isLoggedIn" to="/login">Login</router-link>
         <span v-if="isLoggedIn"> | <a @click="logout">Logout</a></span>
       </li>
       <li>
-        <router-link to="/login">Login</router-link>
-      </li>
-      <li>
-        <router-link to="/register">Register</router-link>
+        <router-link v-if="!isLoggedIn" to="/register">Register</router-link>
       </li>
     </ul>
   </div>
@@ -25,6 +25,11 @@
 
 export default {
   name: 'App',
+  data () {
+    return {
+      name: ''
+    }
+  },
   computed: {
     isLoggedIn: function () { return this.$store.getters.isLoggedIn }
   },

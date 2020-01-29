@@ -13,7 +13,7 @@
 
 <script>
 
-import PostsService from '@/services/PostsService'
+// import PostsService from '@/services/PostsService'
 
 export default {
   data () {
@@ -25,24 +25,15 @@ export default {
     }
   },
   methods: {
-    async Authenticate () {
+    Authenticate: function () {
       let data = {
         name: this.name,
         email: this.email,
-        password: this.password,
-        is_admin: this.is_admin
-      }
-      this.$storestore.dispatch('register', data)
-      await PostsService.Auth({
-        name: this.name,
-        email: this.email,
         password: this.pass
-      }).then(function (results) {
-        console.log(results)
-        this.$router.push({ name: 'Posts' })
-      }, function (err) {
-        console.log(err)
-      })
+      }
+      this.$store.dispatch('register', data)
+        .then(() => this.$router.push('/login'))
+        .catch(err => console.log(err))
     }
   }
 }

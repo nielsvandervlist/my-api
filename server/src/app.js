@@ -4,6 +4,8 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
 const bcrypt = require('bcrypt')
+const config = require('./config')
+const jwt = require('jsonwebtoken')
 const saltRounds = 10
 
 var mongoose = require('mongoose')
@@ -107,6 +109,7 @@ app.post('/users/create', (req, res) => {
   var name = req.body.name
   var email = req.body.email
   var password = req.body.password
+  
   var newUser
 
   bcrypt.genSalt(saltRounds, function (_err, salt) {
@@ -127,7 +130,7 @@ app.post('/users/create', (req, res) => {
         } else {
           res.send({
             success: true,
-            message: 'Post saved successfully!'
+            message: 'User saved succesfully!'
           })
         }
       })
@@ -155,10 +158,11 @@ app.post('/users/login', (req, res) => {
     } else {
       bcrypt.compare(req.body.password, user.password, function (_err, result) {
         if (result) {
+          let token = jwt.sign({ id: user.id }, config.secret, { expiresIn: 86400 })
           res.send({
             success: true,
             user: user,
-            token: 'test'
+            token: token
           })
         } else {
           res.send({
