@@ -55,9 +55,7 @@ export default new Vuex.Store({
         // eslint-disable-next-line standard/object-curly-even-spacing
         axios({url: 'http://localhost:8081/users/create', data: user, method: 'POST' })
           .then(resp => {
-            console.log(resp)
-            const user = resp.data.user
-            commit('auth_success', user)
+            // Set custom response here this is now redirecting to login
             resolve(resp)
           })
           .catch(err => {
