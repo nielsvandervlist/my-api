@@ -21,7 +21,6 @@ const UserSchema = new Schema({
     minlength: 5,
     maxlength: 1024
   }
-  // posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
 })
 
 var User = mongoose.model('User', UserSchema)
