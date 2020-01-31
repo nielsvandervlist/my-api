@@ -30,6 +30,7 @@ app.use(cors())
 app.post('/posts', (req, res) => {
   db = req.db
   var user = req.body.user
+  console.log(user)
   var title = req.body.title
   var description = req.body.description
   // eslint-disable-next-line camelcase
@@ -69,12 +70,13 @@ app.get('/post/:id', (req, res) => {
   })
 })
 
-// Fetch user posts
-app.get('/post/user', (req, res) => {
-  db = req.db
-  Post.find(req.body.user, 'title description', function (error, post) {
-    if (error) { console.error(error) }
-    res.send(post)
+// Get user posts
+app.get('/posts/user', (req, res) => {
+  Post.find({user: req.user}, 'title description', function (error, posts) {
+    if (error) { console.log(error) }
+    res.send({
+      posts: posts
+    })
   })
 })
 
@@ -171,7 +173,8 @@ app.post('/users/login', (req, res) => {
           res.send({
             success: true,
             user: user,
-            token: token
+            token: token,
+            message: 'Login succesfull'
           })
         } else {
           res.send({

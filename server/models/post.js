@@ -4,14 +4,7 @@ var Schema = mongoose.Schema
 var PostSchema = new Schema({
   user: String,
   title: String,
-  description: String,
-  author: {
-    id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    username: String
-  }
+  description: String
 })
 
 var Post = mongoose.model('Post', PostSchema)

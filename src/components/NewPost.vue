@@ -34,6 +34,7 @@ export default {
   methods: {
     async addPost () {
       await PostsService.addPost({
+        user: this.user,
         title: this.title,
         description: this.description
       })
