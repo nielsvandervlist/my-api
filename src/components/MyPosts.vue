@@ -1,17 +1,19 @@
 <template>
   <div class="posts">
-    <h1>Posts</h1>
+    <h1>My Posts</h1>
     <div v-if="posts.length > 0" class="table-wrap">
       <div>
         <router-link v-bind:to="{ name: 'NewPost' }" class="">Add Post</router-link>
       </div>
       <table>
         <tr>
+            <td>User</td>
           <td>Title</td>
           <td width="550">Description</td>
           <td width="100" align="center">Action</td>
         </tr>
         <tr v-for="post in posts" :key="post.id">
+            <td>{{ post.user }}</td>
           <td>{{ post.title }}</td>
           <td>{{ post.description }}</td>
           <td align="center">
