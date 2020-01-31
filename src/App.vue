@@ -3,10 +3,13 @@
      <div class="navigation">
     <ul>
       <li>
-        <router-link to="/hello"></router-link>
+        <router-link to="/">Home</router-link>
       </li>
       <li>
         <router-link to="/posts">Posts</router-link>
+      </li>
+      <li>
+        <router-link to="/myposts">My Posts</router-link>
       </li>
       <li>
         <router-link v-if="!isLoggedIn" to="/login">Login</router-link>

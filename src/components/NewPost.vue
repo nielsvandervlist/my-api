@@ -1,7 +1,7 @@
 
 <template>
   <div class="posts">
-    <h1>Add Post</h1>
+    <h1>Add Post to Profile {{ user }}</h1>
       <div class="form">
         <div>
           <input type="text" name="title" placeholder="TITLE" v-model="title">
@@ -24,6 +24,11 @@ export default {
     return {
       title: '',
       description: ''
+    }
+  },
+  computed: {
+    user () {
+      return this.$store.state.user.name
     }
   },
   methods: {

@@ -29,13 +29,14 @@ app.use(cors())
 // Add new post
 app.post('/posts', (req, res) => {
   db = req.db
+  var user = req.body.user
   var title = req.body.title
   var description = req.body.description
   // eslint-disable-next-line camelcase
   var new_post = new Post({
+    user: user,
     title: title,
     description: description
-    // user: User._id
   })
 
   new_post.save(function (error) {
@@ -63,6 +64,15 @@ app.get('/posts', (req, res) => {
 app.get('/post/:id', (req, res) => {
   db = req.db
   Post.findById(req.params.id, 'title description', function (error, post) {
+    if (error) { console.error(error) }
+    res.send(post)
+  })
+})
+
+// Fetch user posts
+app.get('/post/user', (req, res) => {
+  db = req.db
+  Post.find(req.body.user, 'title description', function (error, post) {
     if (error) { console.error(error) }
     res.send(post)
   })
@@ -109,7 +119,6 @@ app.post('/users/create', (req, res) => {
   var name = req.body.name
   var email = req.body.email
   var password = req.body.password
-  
   var newUser
 
   bcrypt.genSalt(saltRounds, function (_err, salt) {

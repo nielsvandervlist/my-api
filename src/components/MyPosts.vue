@@ -7,13 +7,11 @@
       </div>
       <table>
         <tr>
-          <td>User</td>
           <td>Title</td>
           <td width="550">Description</td>
           <td width="100" align="center">Action</td>
         </tr>
         <tr v-for="post in posts" :key="post.id">
-          <td>{{ post.user }}</td>
           <td>{{ post.title }}</td>
           <td>{{ post.description }}</td>
           <td align="center">

@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <h1>Hi there, {{ user }}</h1>
     <h2>Essential Links</h2>
   </div>
 </template>
@@ -12,6 +12,11 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  computed: {
+    user () {
+      return this.$store.state.user.name
     }
   }
 }

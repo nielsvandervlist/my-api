@@ -4,6 +4,7 @@ import Login from '@/components/Login'
 import store from '@/store'
 import Hello from '@/components/Hello'
 import Posts from '@/components/Posts'
+import MyPosts from '@/components/MyPosts'
 import NewPost from '@/components/NewPost'
 import EditPost from '@/components/EditPost'
 import Secure from '@/components/Secure.vue'
@@ -46,14 +47,28 @@ const $router = new Router({
       }
     },
     {
+      path: '/myposts',
+      name: 'MyPosts',
+      component: MyPosts,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/posts/new',
       name: 'NewPost',
-      component: NewPost
+      component: NewPost,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/posts/:id',
       name: 'EditPost',
-      component: EditPost
+      component: EditPost,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })
