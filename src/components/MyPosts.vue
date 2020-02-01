@@ -46,6 +46,7 @@ export default {
   methods: {
     async getPosts () {
       const response = await PostsService.getMyPost()
+      console.log(response)
       this.posts = response.data.posts
     },
     async deletePost (id) {

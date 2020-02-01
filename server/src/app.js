@@ -29,7 +29,7 @@ app.use(cors())
 // Add new post
 app.post('/posts', (req, res) => {
   db = req.db
-  var userid = req.body.user._id
+  var userid = req.body.userid
   var user = req.body.user
   console.log(userid)
   console.log(user)
@@ -39,7 +39,8 @@ app.post('/posts', (req, res) => {
   var new_post = new Post({
     title: title,
     description: description,
-    user: user
+    user: user,
+    userid: userid
   })
 
   console.log(new_post)
@@ -76,8 +77,8 @@ app.get('/post/:id', (req, res) => {
 
 // Get user posts
 app.get('/posts/user', (req, res) => {
-  console.log(req)
-  Post.find({user: req.body.user}, 'title description user', function (error, posts) {
+  console.log(req.body)
+  Post.find({user: 'nielsie'}, 'title description user', function (error, posts) {
     if (error) { console.log(error) }
     res.send({
       posts: posts
@@ -156,7 +157,7 @@ app.post('/users/create', (req, res) => {
 
 // Fetch all users
 app.get('/users', (req, res) => {
-  User.find({}, 'email password', function (error, users) {
+  User.find({}, 'email password posts', function (error, users) {
     if (error) { console.error(error) }
     res.send({
       users: users

@@ -20,7 +20,10 @@ const UserSchema = new Schema({
     required: true,
     minlength: 5,
     maxlength: 1024
-  }
+  },
+  posts: [
+    {type: mongoose.Schema.Types.ObjectId, ref: 'Post'}
+  ]
 })
 
 var User = mongoose.model('User', UserSchema)
