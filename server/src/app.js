@@ -76,6 +76,7 @@ app.get('/post/:id', (req, res) => {
 
 // Get user posts
 app.get('/posts/user', (req, res) => {
+  console.log(req)
   Post.find({user: req.body.user}, 'title description user', function (error, posts) {
     if (error) { console.log(error) }
     res.send({
