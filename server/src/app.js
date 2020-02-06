@@ -9,6 +9,24 @@ const jwt = require('jsonwebtoken')
 const saltRounds = 10
 
 var mongoose = require('mongoose')
+const passport = require('passport')
+var Local = require('passport-local').Strategy
+
+passport.use(new Local(
+  function (username, password, done) {
+    User.findOne({ username: username }, function (err, user) {
+      if (err) { return done(err) }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' })
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' })
+      }
+      return done(null, user)
+    })
+  }
+))
+
 mongoose.connect('mongodb://localhost:27017/posts')
 
 var db = mongoose.connection
@@ -19,12 +37,16 @@ db.once('open', function (callback) {
 })
 
 var Post = require('../models/post')
+var User = require('../models/user')
 
 const app = express()
 app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
 // app.use('/api/users', users)
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 // Add new post
 app.post('/posts', (req, res) => {
@@ -77,7 +99,7 @@ app.get('/post/:id', (req, res) => {
 
 // Get user posts
 app.get('/posts/user', (req, res) => {
-  console.log(req.body)
+  console.log(req.body.user)
   Post.find({user: 'nielsie'}, 'title description user', function (error, posts) {
     if (error) { console.log(error) }
     res.send({
@@ -119,8 +141,6 @@ app.delete('/posts/:id', (req, res) => {
   })
 })
 
-var User = require('../models/user')
-
 // Register user
 app.post('/users/create', (req, res) => {
   db = req.db
@@ -156,6 +176,17 @@ app.post('/users/create', (req, res) => {
 })
 
 // Fetch all users
+app.get('/user', (req, res) => {
+  User.findById(req.body.user, 'email password posts', function (error, users) {
+    if (error) { console.error(error) }
+    res.send({
+      users: users,
+      message: 'user found'
+    })
+  })
+})
+
+// Fetch all users
 app.get('/users', (req, res) => {
   User.find({}, 'email password posts', function (error, users) {
     if (error) { console.error(error) }
@@ -166,7 +197,8 @@ app.get('/users', (req, res) => {
 })
 
 // login page
-app.post('/users/login', (req, res) => {
+app.post('/users/login', passport.authenticate('local'), (req, res) => {
+  console.log(req.user)
   User.findOne().where({
     email: req.body.email
   }).then(function (user) {

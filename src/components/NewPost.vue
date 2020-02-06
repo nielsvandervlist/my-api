@@ -1,7 +1,7 @@
 
 <template>
   <div class="posts">
-    <h1>Add Post to Profile {{ user }}</h1>
+    <h1>Add Post to Profile {{ getUserName }}</h1>
       <div class="form">
         <div>
           <input type="text" name="title" placeholder="TITLE" v-model="title">
@@ -23,18 +23,23 @@ export default {
   data () {
     return {
       title: '',
-      description: ''
+      description: '',
+      username: ''
     }
   },
   computed: {
     user () {
+      return this.$store.state.user
+    },
+    getUserName () {
       return this.$store.state.user.name
     }
   },
   methods: {
     async addPost () {
       await PostsService.addPost({
-        user: this.user,
+        userid: this.user._id,
+        user: this.user.name,
         title: this.title,
         description: this.description
       })
