@@ -18,7 +18,8 @@ export default {
   },
 
   getMyPost (params) {
-    return Api().get('posts/user')
+    console.log(params)
+    return Api().post('posts/user', params)
   },
 
   deletePost (id) {

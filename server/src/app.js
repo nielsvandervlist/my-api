@@ -95,9 +95,9 @@ app.get('/post/:id', (req, res) => {
 })
 
 // Get user posts
-app.get('/posts/user', (req, res) => {
-  console.log(req.body.user)
-  Post.find({user: 'nielsie'}, 'title description user', function (error, posts) {
+app.post('/posts/user', (req, res) => {
+  console.log(req.body)
+  Post.find({user: req.body.user.name}, 'title description user', function (error, posts) {
     if (error) { console.log(error) }
     res.send({
       posts: posts
@@ -168,17 +168,6 @@ app.post('/users/create', (req, res) => {
           })
         }
       })
-    })
-  })
-})
-
-// Fetch all users
-app.get('/user', (req, res) => {
-  User.findById(req.body.user, 'email password posts', function (error, users) {
-    if (error) { console.error(error) }
-    res.send({
-      users: users,
-      message: 'user found'
     })
   })
 })

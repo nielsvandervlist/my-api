@@ -40,12 +40,19 @@ export default {
       posts: []
     }
   },
+  computed: {
+    user () {
+      return this.$store.state.user
+    }
+  },
   mounted () {
     this.getPosts()
   },
   methods: {
     async getPosts () {
-      const response = await PostsService.getMyPost()
+      const response = await PostsService.getMyPost({
+        user: this.user
+      })
       console.log(response)
       this.posts = response.data.posts
     },
