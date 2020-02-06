@@ -26,5 +26,11 @@ const UserSchema = new Schema({
   ]
 })
 
+UserSchema.methods.validPassword = function (pwd) {
+  // EXAMPLE CODE!
+  console.log(pwd)
+  return (this.password === pwd)
+}
+
 var User = mongoose.model('User', UserSchema)
 module.exports = User

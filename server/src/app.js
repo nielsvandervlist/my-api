@@ -12,21 +12,6 @@ var mongoose = require('mongoose')
 const passport = require('passport')
 var Local = require('passport-local').Strategy
 
-passport.use(new Local(
-  function (username, password, done) {
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return done(err) }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' })
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' })
-      }
-      return done(null, user)
-    })
-  }
-))
-
 mongoose.connect('mongodb://localhost:27017/posts')
 
 var db = mongoose.connection
@@ -45,6 +30,22 @@ app.use(bodyParser.json())
 app.use(cors())
 // app.use('/api/users', users)
 
+passport.use(new Local(
+  {usernameField: 'email', passwordField: 'password'},
+  function (email, password, done) {
+    User.findOne({ email: email }, function (err, user) {
+      if (err) { return done(err) }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect email.' })
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' })
+      }
+      return done(null, user)
+    })
+  }
+))
+
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -53,8 +54,6 @@ app.post('/posts', (req, res) => {
   db = req.db
   var userid = req.body.userid
   var user = req.body.user
-  console.log(userid)
-  console.log(user)
   var title = req.body.title
   var description = req.body.description
   // eslint-disable-next-line camelcase
@@ -64,8 +63,6 @@ app.post('/posts', (req, res) => {
     user: user,
     userid: userid
   })
-
-  console.log(new_post)
 
   new_post.save(function (error) {
     if (error) {
@@ -198,7 +195,6 @@ app.get('/users', (req, res) => {
 
 // login page
 app.post('/users/login', passport.authenticate('local'), (req, res) => {
-  console.log(req.user)
   User.findOne().where({
     email: req.body.email
   }).then(function (user) {
