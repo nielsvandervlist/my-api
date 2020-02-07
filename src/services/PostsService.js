@@ -18,7 +18,6 @@ export default {
   },
 
   getMyPost (params) {
-    console.log(params)
     return Api().post('posts/user', params)
   },
 

@@ -17,8 +17,8 @@
           <td>{{ post.title }}</td>
           <td>{{ post.description }}</td>
           <td align="center">
-            <router-link v-bind:to="{ name: 'EditPost', params: { id: post._id } }">Edit</router-link> |
-            <a href="#" @click="deletePost(post._id)">Delete</a>
+            <router-link v-if="post.user == loggedUser" v-bind:to="{ name: 'EditPost', params: { id: post._id } }">Edit</router-link> |
+            <a href="#" v-if="post.user == loggedUser" @click="deletePost(post._id)">Delete</a>
           </td>
         </tr>
       </table>
@@ -43,10 +43,16 @@ export default {
   mounted () {
     this.getPosts()
   },
+  computed: {
+    loggedUser () {
+      return this.$store.state.user.name
+    }
+  },
   methods: {
     async getPosts () {
       const response = await PostsService.fetchPosts()
       this.posts = response.data.posts
+      console.log(response)
     },
     async deletePost (id) {
       await PostsService.deletePost(id)
