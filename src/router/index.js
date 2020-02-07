@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import store from '@/store'
 import Hello from '@/components/Hello'
+import Post from '@/components/Post'
 import Posts from '@/components/Posts'
 import MyPosts from '@/components/MyPosts'
 import NewPost from '@/components/NewPost'
@@ -66,6 +67,14 @@ const $router = new Router({
       path: '/posts/:id',
       name: 'EditPost',
       component: EditPost,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/posts/:id',
+      name: 'Post',
+      component: Post,
       meta: {
         requiresAuth: true
       }

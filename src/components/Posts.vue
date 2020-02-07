@@ -14,7 +14,7 @@
         </tr>
         <tr v-for="post in posts" :key="post.id">
           <td>{{ post.user }}</td>
-          <td>{{ post.title }}</td>
+          <td><router-link v-bind:to="{ name: 'Post', params: { id: post._id }}">{{ post.title }}</router-link></td>
           <td>{{ post.description }}</td>
           <td align="center">
             <router-link v-if="post.user == loggedUser" v-bind:to="{ name: 'EditPost', params: { id: post._id } }">Edit</router-link> |

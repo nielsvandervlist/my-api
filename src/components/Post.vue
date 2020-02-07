@@ -1,18 +1,24 @@
 <template>
   <div class="post">
-    <ul v-for="(post, index) in posts" :key="index">
-      <li>{{post.title}}</li>
-      <li>{{post.user}}</li>
-      <li>{{post.discription}}</li>
+    <ul>
+      <li>{{title}}</li>
+      <li>{{user}}</li>
+      <li>{{description}}</li>
     </ul>
   </div>
 </template>
 
 <script>
-export default {
-  data () {
-    return{
 
+import PostsService from '@/services/PostsService'
+
+export default {
+  name: 'Post',
+  data () {
+    return {
+      title: '',
+      description: '',
+      user: ''
     }
   },
   computed: {
@@ -28,6 +34,8 @@ export default {
       })
       this.title = response.data.title
       this.description = response.data.description
+      this.user = response.data.user
+      console.log(response.data)
     }
   }
 }

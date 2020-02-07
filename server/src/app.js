@@ -107,7 +107,7 @@ app.post('/posts/user', (req, res) => {
 // Update a post
 app.put('/posts/:id', (req, res) => {
   db = req.db
-  Post.findById(req.params.id, 'title description', function (error, post) {
+  Post.findById(req.params.id, 'title description user', function (error, post) {
     if (error) { console.error(error) }
 
     post.title = req.body.title
