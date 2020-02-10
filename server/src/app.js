@@ -52,7 +52,6 @@ app.use(passport.session())
 // Add new post
 app.post('/posts', (req, res) => {
   db = req.db
-  var userid = req.body.userid
   var user = req.body.user
   var title = req.body.title
   var description = req.body.description
@@ -61,7 +60,7 @@ app.post('/posts', (req, res) => {
     title: title,
     description: description,
     user: user,
-    userid: userid
+    comment: 'No comments'
   })
 
   new_post.save(function (error) {
@@ -77,7 +76,7 @@ app.post('/posts', (req, res) => {
 
 // Fetch all posts
 app.get('/posts', (req, res) => {
-  Post.find({}, 'title description user', function (error, posts) {
+  Post.find({}, 'title description user comment', function (error, posts) {
     if (error) { console.error(error) }
     res.send({
       posts: posts
@@ -88,7 +87,7 @@ app.get('/posts', (req, res) => {
 // Fetch single post
 app.get('/post/:id', (req, res) => {
   db = req.db
-  Post.findById(req.params.id, 'title description', function (error, post) {
+  Post.findById(req.params.id, 'title description user', function (error, post) {
     if (error) { console.error(error) }
     res.send(post)
   })
@@ -101,6 +100,14 @@ app.post('/posts/user', (req, res) => {
     res.send({
       posts: posts
     })
+  })
+})
+
+app.post('/posts/:id', (req, res) => {
+  // const comment = { comment: req.body.comment }
+  Post.findOneAndUpdate(req.params.id, {$set: {comment: req.body.comment}}, {new: true}, (error, doc) => {
+    if (error) {console.log(error) }
+    console.log(doc)
   })
 })
 

@@ -5,6 +5,11 @@
       <li>{{user}}</li>
       <li>{{description}}</li>
     </ul>
+
+    <div class="comment-text">{{comment}}</div>
+
+    <input type="text" name="comment" id="comment" v-model="comment">
+    <button class="btn" @click="addComment">Add Comment</button>
   </div>
 </template>
 
@@ -18,7 +23,8 @@ export default {
     return {
       title: '',
       description: '',
-      user: ''
+      user: '',
+      comment: ''
     }
   },
   computed: {
@@ -36,6 +42,12 @@ export default {
       this.description = response.data.description
       this.user = response.data.user
       console.log(response.data)
+    },
+    async addComment () {
+      await PostsService.addComment({
+        id: this.$route.params.id,
+        comment: this.comment
+      })
     }
   }
 }
