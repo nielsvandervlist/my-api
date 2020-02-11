@@ -41,12 +41,17 @@ export default {
       this.title = response.data.title
       this.description = response.data.description
       this.user = response.data.user
+      this.comment = response.data.comment
       console.log(response.data)
     },
     async addComment () {
+      console.log(this.$route.params.id)
       await PostsService.addComment({
         id: this.$route.params.id,
-        comment: this.comment
+        comment: {
+          user: this.user,
+          text: this.comment
+        }
       })
     }
   }

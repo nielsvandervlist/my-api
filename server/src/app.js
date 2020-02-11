@@ -76,7 +76,7 @@ app.post('/posts', (req, res) => {
 
 // Fetch all posts
 app.get('/posts', (req, res) => {
-  Post.find({}, 'title description user comment', function (error, posts) {
+  Post.find({}, 'title description user comments', function (error, posts) {
     if (error) { console.error(error) }
     res.send({
       posts: posts
@@ -87,7 +87,7 @@ app.get('/posts', (req, res) => {
 // Fetch single post
 app.get('/post/:id', (req, res) => {
   db = req.db
-  Post.findById(req.params.id, 'title description user', function (error, post) {
+  Post.findById(req.params.id, 'title description user comment', function (error, post) {
     if (error) { console.error(error) }
     res.send(post)
   })
@@ -103,10 +103,10 @@ app.post('/posts/user', (req, res) => {
   })
 })
 
+// Set comment
 app.post('/posts/:id', (req, res) => {
-  // const comment = { comment: req.body.comment }
-  Post.findOneAndUpdate(req.params.id, {$set: {comment: req.body.comment}}, {new: true}, (error, doc) => {
-    if (error) {console.log(error) }
+  Post.findOneAndUpdate({_id: req.params.id}, {$push: {comments: req.body.comment}}, {new: true}, (error, doc) => {
+    if (error) { console.log(error) }
     console.log(doc)
   })
 })
