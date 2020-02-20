@@ -88,16 +88,15 @@ app.post('/posts/:id', (req, res) => {
   })
 })
 
-// app.delete('/posts/comments/:id', (req, res) => {
-//   db = req.db
-//   Post.update({_id: req.params.id}, function (err, post) {
-//     if (err)
-//       res.send(err)
-//     res.send({
-//       success: true
-//     })
-//   })
-// }
+app.delete('/posts/:id', (req, res) => {
+  db = req.db
+  console.log(req.params.id)
+  console.log(req.params)
+  Post.update({_id: req.params.id}, {$pull: {comments: req.body.comment}}, (error, doc) => {
+    if (error) { console.log(error) }
+    console.log(doc)
+  })
+})
 
 // Update a post
 app.put('/posts/:id', (req, res) => {

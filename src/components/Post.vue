@@ -8,7 +8,7 @@
     <h3>Comments</h3>
     <ul v-for="(comment, index) in comments" :key="index">
       <li><b>{{comment.user}}</b> : {{comment.text}}</li>
-      <a href="#" v-if="post.user == loggedUser" @click="deletePost(post._id)">Delete</a>
+      <a href="#" @click="removeComment(comment._id)">Delete</a>
     </ul>
 
     <input type="text" name="comment" id="comment" v-model="addcomment">
@@ -28,7 +28,8 @@ export default {
       description: '',
       user: '',
       comments: '',
-      addcomment: ''
+      addcomment: '',
+      comment: ''
     }
   },
   computed: {
@@ -57,8 +58,11 @@ export default {
       })
       this.$router.push({ name: 'Posts' })
     },
-    async removeComment (id) {
-      await PostsService.deleteComment(id)
+    async removeComment (comment) {
+      await PostsService.deleteComment({
+        id: this.$route.params.id,
+        rcomment: comment
+      })
     }
   }
 }
