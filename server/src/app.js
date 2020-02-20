@@ -9,9 +9,6 @@ const jwt = require('jsonwebtoken')
 const saltRounds = 10
 
 var mongoose = require('mongoose')
-const passport = require('passport')
-var Local = require('passport-local').Strategy
-
 mongoose.connect('mongodb://localhost:27017/posts')
 
 var db = mongoose.connection
@@ -28,26 +25,6 @@ const app = express()
 app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
-// app.use('/api/users', users)
-
-// passport.use(new Local(
-//   {usernameField: 'email', passwordField: 'password'},
-//   function (email, password, done) {
-//     User.findOne({ email: email }, function (err, user) {
-//       if (err) { return done(err) }
-//       if (!user) {
-//         return done(null, false, { message: 'Incorrect email.' })
-//       }
-//       if (!user.validPassword(password)) {
-//         return done(null, false, { message: 'Incorrect password.' })
-//       }
-//       return done(null, user)
-//     })
-//   }
-// ))
-
-app.use(passport.initialize())
-app.use(passport.session())
 
 // Add new post
 app.post('/posts', (req, res) => {
@@ -87,7 +64,7 @@ app.get('/posts', (req, res) => {
 // Fetch single post
 app.get('/post/:id', (req, res) => {
   db = req.db
-  Post.findById(req.params.id, 'title description user comment', function (error, post) {
+  Post.findById(req.params.id, 'title description user comments', function (error, post) {
     if (error) { console.error(error) }
     res.send(post)
   })

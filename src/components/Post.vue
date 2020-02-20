@@ -1,14 +1,17 @@
 <template>
   <div class="post">
+    <h3>{{title}} by: {{user}}</h3><span></span>
     <ul>
-      <li>{{title}}</li>
-      <li>{{user}}</li>
       <li>{{description}}</li>
     </ul>
 
-    <div class="comment-text">{{comment}}</div>
+    <h3>Comments</h3>
+    <ul v-for="(comment, index) in comments" :key="index">
+      <li>{{comment.user}}</li>
+      <li>{{comment.text}}</li>
+    </ul>
 
-    <input type="text" name="comment" id="comment" v-model="comment">
+    <input type="text" name="comment" id="comment" v-model="comments">
     <button class="btn" @click="addComment">Add Comment</button>
   </div>
 </template>
@@ -24,7 +27,7 @@ export default {
       title: '',
       description: '',
       user: '',
-      comment: ''
+      comments: ''
     }
   },
   computed: {
@@ -41,7 +44,7 @@ export default {
       this.title = response.data.title
       this.description = response.data.description
       this.user = response.data.user
-      this.comment = response.data.comment
+      this.comments = response.data.comments
       console.log(response.data)
     },
     async addComment () {
@@ -50,7 +53,7 @@ export default {
         id: this.$route.params.id,
         comment: {
           user: this.user,
-          text: this.comment
+          text: this.comments
         }
       })
     }
