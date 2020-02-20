@@ -29,6 +29,10 @@ export default {
     return Api().delete('posts/' + id)
   },
 
+  deleteComment (id) {
+    return Api().delete('posts/comments/' + id)
+  },
+
   Auth (params) {
     return Api().post('users/create', params)
   },

@@ -88,6 +88,17 @@ app.post('/posts/:id', (req, res) => {
   })
 })
 
+// app.delete('/posts/comments/:id', (req, res) => {
+//   db = req.db
+//   Post.update({_id: req.params.id}, function (err, post) {
+//     if (err)
+//       res.send(err)
+//     res.send({
+//       success: true
+//     })
+//   })
+// }
+
 // Update a post
 app.put('/posts/:id', (req, res) => {
   db = req.db
