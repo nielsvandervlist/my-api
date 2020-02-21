@@ -88,11 +88,11 @@ app.post('/posts/:id', (req, res) => {
   })
 })
 
-app.delete('/posts/:id', (req, res) => {
+// Delete comment
+app.post('/posts/:id', (req, res) => {
   db = req.db
-  console.log(req.params.id)
   console.log(req.params)
-  Post.update({_id: req.params.id}, {$pull: {comments: req.body.comment}}, (error, doc) => {
+  Post.findOneAndUpdate({_id: req.params.id}, {$pull: {comments: [req.body.comment]}}, (error, doc) => {
     if (error) { console.log(error) }
     console.log(doc)
   })
