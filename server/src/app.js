@@ -10,6 +10,7 @@ const saltRounds = 10
 
 var mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/posts')
+mongoose.set('useFindAndModify', false)
 
 var db = mongoose.connection
 
@@ -80,19 +81,18 @@ app.post('/posts/user', (req, res) => {
   })
 })
 
-// Set comment
-app.post('/posts/:id', (req, res) => {
-  Post.findOneAndUpdate({_id: req.params.id}, {$push: {comments: req.body.comment}}, {new: true}, (error, doc) => {
+// Delete comment
+app.post('/posts/comments', (req, res) => {
+  db = req.db
+  Post.findOneAndUpdate({_id: req.body.comment.postID}, {$pull: {comments: {_id: req.body.comment.commentID}}}, false, (error, doc) => {
     if (error) { console.log(error) }
     console.log(doc)
   })
 })
 
-// Delete comment
+// Set comment
 app.post('/posts/:id', (req, res) => {
-  db = req.db
-  console.log(req.params)
-  Post.findOneAndUpdate({_id: req.params.id}, {$pull: {comments: [req.body.comment]}}, (error, doc) => {
+  Post.findOneAndUpdate({_id: req.params.id}, {$push: {comments: req.body.comment}}, {new: true}, (error, doc) => {
     if (error) { console.log(error) }
     console.log(doc)
   })

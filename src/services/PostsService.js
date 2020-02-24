@@ -30,7 +30,7 @@ export default {
   },
 
   deleteComment (params) {
-    return Api().post('posts/' + params.id, params)
+    return Api().post('posts/comments', params)
   },
 
   Auth (params) {
