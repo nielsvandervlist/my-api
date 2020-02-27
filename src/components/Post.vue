@@ -11,8 +11,9 @@
       <a href="#" @click="removeComment(comment._id)">Delete</a>
     </ul>
 
-    <ul v-for="(comment, index) in newcomment" :key="index">
+    <ul v-for="(comment, i) in newcomment" :key="`new-${i}`">
       <li><b>{{user}}</b>{{comment}}</li>
+      <a href="#" @click="removeComment(comment._id)">Delete</a>
     </ul>
 
     <input type="text" name="comment" id="comment" v-model="addcomment">
@@ -73,11 +74,6 @@ export default {
       })
       this.getPost()
       this.$router.go()
-      // this.comments.filter(function (ele, i) {
-      //   if (ele._id === getID) {
-      //     return ele !== i
-      //   }
-      // })
     }
   }
 }
