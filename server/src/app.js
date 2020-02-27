@@ -86,7 +86,9 @@ app.post('/posts/comments', (req, res) => {
   db = req.db
   Post.findOneAndUpdate({_id: req.body.comment.postID}, {$pull: {comments: {_id: req.body.comment.commentID}}}, false, (error, doc) => {
     if (error) { console.log(error) }
-    console.log(doc)
+    res.send({
+      succes: true
+    })
   })
 })
 

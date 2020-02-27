@@ -12,7 +12,7 @@
     </ul>
 
     <ul v-for="(comment, index) in newcomment" :key="index">
-      <li>{{comment}}</li>
+      <li><b>{{user}}</b>{{comment}}</li>
     </ul>
 
     <input type="text" name="comment" id="comment" v-model="addcomment">
@@ -71,6 +71,13 @@ export default {
           commentID: getID
         }
       })
+      this.getPost()
+      this.$router.go()
+      // this.comments.filter(function (ele, i) {
+      //   if (ele._id === getID) {
+      //     return ele !== i
+      //   }
+      // })
     }
   }
 }

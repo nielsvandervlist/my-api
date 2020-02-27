@@ -64,7 +64,7 @@ const $router = new Router({
       }
     },
     {
-      path: '/posts/:id',
+      path: '/posts/edit/:id',
       name: 'EditPost',
       component: EditPost,
       meta: {
