@@ -6,35 +6,48 @@ const morgan = require('morgan')
 const bcrypt = require('bcrypt')
 const config = require('./config')
 const jwt = require('jsonwebtoken')
+const fs = require('fs')
 const saltRounds = 10
+// const multer = require('multer')
 
-var mongoose = require('mongoose')
+let mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/posts')
 mongoose.set('useFindAndModify', false)
 
-var db = mongoose.connection
+let db = mongoose.connection
 
 db.on('error', console.error.bind(console, 'connection error'))
 db.once('open', function (callback) {
   console.log('Connection Succeeded')
 })
 
-var Post = require('../models/post')
-var User = require('../models/user')
+const Image = require('../models/image')
+const multer = require('multer')
+const path = require('path')
+const UPLOAD_PATH = path.resolve(__dirname, '../uploads')
+const upload = multer({
+  dest: UPLOAD_PATH,
+  limits: {fileSize: 1000000, files: 5}
+})
+
+let Post = require('../models/post')
+let User = require('../models/user')
 
 const app = express()
 app.use(morgan('combined'))
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
 // Add new post
 app.post('/posts', (req, res) => {
   db = req.db
-  var user = req.body.user
-  var title = req.body.title
-  var description = req.body.description
+  let user = req.body.user
+  let title = req.body.title
+  let description = req.body.description
+
   // eslint-disable-next-line camelcase
-  var new_post = new Post({
+  let new_post = new Post({
     title: title,
     description: description,
     user: user,
@@ -54,12 +67,35 @@ app.post('/posts', (req, res) => {
 
 // Fetch all posts
 app.get('/posts', (req, res) => {
+  console.log(req)
   Post.find({}, 'title description user comments', function (error, posts) {
     if (error) { console.error(error) }
     res.send({
       posts: posts
     })
   }).sort({_id: -1})
+})
+
+// upload image
+app.post('/upload', upload.array('file', 5), (req, res, next) => {
+  const images = req.files.map((file) => {
+    return {
+      filename: file.filename,
+      originalname: file.originalname
+    }
+  })
+  Image.insertMany(images, (err, result) => {
+    if (err) return res.sendStatus(404)
+    res.json(result)
+  })
+})
+
+// get image with id
+app.get('/:id', (req, res, next) => {
+  Image.findOne({_id: req.params.id}, (err, image) => {
+    if (err) return res.sendStatus(404)
+    fs.createReadStream(path.resolve(UPLOAD_PATH, image.filename)).pipe(res)
+  })
 })
 
 // Fetch single post
@@ -136,10 +172,10 @@ app.delete('/posts/:id', (req, res) => {
 // Register user
 app.post('/users/create', (req, res) => {
   db = req.db
-  var name = req.body.name
-  var email = req.body.email
-  var password = req.body.password
-  var newUser
+  let name = req.body.name
+  let email = req.body.email
+  let password = req.body.password
+  let newUser
 
   bcrypt.genSalt(saltRounds, function (_err, salt) {
     bcrypt.hash(password, salt, function (_err, hash) {

@@ -9,6 +9,10 @@ export default {
     return Api().post('posts', params)
   },
 
+  addFile (params) {
+    return Api().post('upload', params)
+  },
+
   updatePost (params) {
     return Api().put('posts/' + params.id, params)
   },
