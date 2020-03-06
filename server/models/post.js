@@ -6,6 +6,7 @@ var PostSchema = new Schema({
   description: String,
   user: {type: String, ref: 'User'},
   userid: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  image: [{ type: Schema.Types.ObjectId, ref: 'Image' }],
   comments: [
     {
       user: String,

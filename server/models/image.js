@@ -9,7 +9,8 @@ const Image = new Schema({
   originalname: {
     type: String,
     required: true
-  }
+  },
+  post: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
 }, {timestamps: true})
 
 module.exports = mongoose.model('Image', Image)

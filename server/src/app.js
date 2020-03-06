@@ -21,14 +21,31 @@ db.once('open', function (callback) {
   console.log('Connection Succeeded')
 })
 
+// Files
 const Image = require('../models/image')
 const multer = require('multer')
 const path = require('path')
 const UPLOAD_PATH = path.resolve(__dirname, '../uploads')
+
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png']
+  if (!allowedTypes.includes(file.mimetype)) {
+    const error = new Error('incorrect file type')
+    error.code = 'INCORRECT_FILETYPE'
+    // error ocurred
+    return cb(error, false)
+  }
+  // nothing went wrong
+  cb(null, true)
+}
+
 const upload = multer({
   dest: UPLOAD_PATH,
+  fileFilter,
   limits: {fileSize: 1000000, files: 5}
 })
+
+let thisisa
 
 let Post = require('../models/post')
 let User = require('../models/user')
@@ -39,6 +56,37 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
+// upload image
+app.post('/upload', upload.array('file', 5), (req, res, next) => {
+  const images = req.files.map((file) => {
+    return {
+      filename: file.filename,
+      originalname: file.originalname
+    }
+  })
+
+  thisisa = images
+
+  Image.insertMany(images, (err, result) => {
+    if (err) return res.sendStatus(404)
+    console.log(images)
+  })
+})
+
+app.use((err, req, res, next) => {
+  if (err.code === 'INCORRECT_FILETYPE') {
+    res.status(422).json({ error: 'Only images are allowed' })
+  }
+})
+
+// get image with id
+app.get('upload/:id', (req, res, next) => {
+  Image.findOne({_id: req.params.id}, (err, image) => {
+    if (err) return res.sendStatus(404)
+    fs.createReadStream(path.resolve(UPLOAD_PATH, image.filename)).pipe(res)
+  })
+})
+
 // Add new post
 app.post('/posts', (req, res) => {
   db = req.db
@@ -46,12 +94,15 @@ app.post('/posts', (req, res) => {
   let title = req.body.title
   let description = req.body.description
 
+  console.log(user)
+
   // eslint-disable-next-line camelcase
   let new_post = new Post({
     title: title,
     description: description,
     user: user,
-    comment: 'No comments'
+    comment: 'No comments',
+    image: thisisa.filename
   })
 
   new_post.save(function (error) {
@@ -67,35 +118,12 @@ app.post('/posts', (req, res) => {
 
 // Fetch all posts
 app.get('/posts', (req, res) => {
-  console.log(req)
-  Post.find({}, 'title description user comments', function (error, posts) {
+  Post.find({}, 'title description user comments image', function (error, posts) {
     if (error) { console.error(error) }
     res.send({
       posts: posts
     })
   }).sort({_id: -1})
-})
-
-// upload image
-app.post('/upload', upload.array('file', 5), (req, res, next) => {
-  const images = req.files.map((file) => {
-    return {
-      filename: file.filename,
-      originalname: file.originalname
-    }
-  })
-  Image.insertMany(images, (err, result) => {
-    if (err) return res.sendStatus(404)
-    res.json(result)
-  })
-})
-
-// get image with id
-app.get('/:id', (req, res, next) => {
-  Image.findOne({_id: req.params.id}, (err, image) => {
-    if (err) return res.sendStatus(404)
-    fs.createReadStream(path.resolve(UPLOAD_PATH, image.filename)).pipe(res)
-  })
 })
 
 // Fetch single post
@@ -161,11 +189,13 @@ app.delete('/posts/:id', (req, res) => {
   Post.remove({
     _id: req.params.id
   }, function (err, post) {
-    if (err)
+    if (err) {
       res.send(err)
-    res.send({
-      success: true
-    })
+    } else {
+      res.send({
+        success: true
+      })
+    }
   })
 })
 

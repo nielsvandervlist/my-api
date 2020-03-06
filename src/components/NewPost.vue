@@ -13,7 +13,7 @@
           <input type="file" name="file" id="file">
         </div>
         <div>
-          <button class="app_post_btn" @click="uploadImage">Add</button>
+          <button class="app_post_btn" @click="addPost">Add</button>
         </div>
       </div>
   </div>
@@ -40,22 +40,16 @@ export default {
     }
   },
   methods: {
-    // async addPost () {
-    //   await PostsService.addPost({
-    //     userid: this.user._id,
-    //     user: this.user.name,
-    //     title: this.title,
-    //     description: this.description
-    //   })
-    //   this.$router.push({ name: 'Posts' })
-    // },
-    async uploadImage () {
+    async addPost () {
       const files = document.getElementById('file').files
       const formData = new FormData()
       formData.append('file', files[0])
-      console.log(...formData)
-      await PostsService.addFile(formData)
-      this.$router.push({ name: 'Posts' })
+      await Promise.all([PostsService.addFile(formData), PostsService.addPost({
+        userid: this.user._id,
+        user: this.user.name,
+        title: this.title,
+        description: this.description
+      })], this.$router.push({ name: 'Posts' }))
     }
   }
 }
