@@ -44,6 +44,7 @@ export default {
       const files = document.getElementById('file').files
       const formData = new FormData()
       formData.append('file', files[0])
+      formData.append('postTitle', this.title)
       await Promise.all([PostsService.addFile(formData), PostsService.addPost({
         userid: this.user._id,
         user: this.user.name,

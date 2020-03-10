@@ -8,7 +8,6 @@ const config = require('./config')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const saltRounds = 10
-// const multer = require('multer')
 
 let mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/posts')
@@ -22,7 +21,7 @@ db.once('open', function (callback) {
 })
 
 // Files
-const Image = require('../models/image')
+let Image = require('../models/image')
 const multer = require('multer')
 const path = require('path')
 const UPLOAD_PATH = path.resolve(__dirname, '../uploads')
@@ -45,10 +44,10 @@ const upload = multer({
   limits: {fileSize: 1000000, files: 5}
 })
 
-let thisisa
-
 let Post = require('../models/post')
 let User = require('../models/user')
+
+let myImg
 
 const app = express()
 app.use(morgan('combined'))
@@ -65,18 +64,29 @@ app.post('/upload', upload.array('file', 5), (req, res, next) => {
     }
   })
 
-  thisisa = images
-
   Image.insertMany(images, (err, result) => {
     if (err) return res.sendStatus(404)
-    console.log(images)
+    res.send({
+      success: true,
+      message: 'Post saved successfully!'
+    })
   })
 })
 
-app.use((err, req, res, next) => {
-  if (err.code === 'INCORRECT_FILETYPE') {
-    res.status(422).json({ error: 'Only images are allowed' })
-  }
+// app.use((err, req, res, next) => {
+//   if (err.code === 'INCORRECT_FILETYPE') {
+//     res.status(422).json({ error: 'Only images are allowed' })
+//   }
+// })
+
+// Get all images
+app.get('/upload', (req, res) => {
+  Image.find({}, '_id', function (error, images) {
+    if (error) { console.error(error) }
+    res.send({
+      images: images
+    })
+  }).sort({_id: -1})
 })
 
 // get image with id
@@ -94,7 +104,7 @@ app.post('/posts', (req, res) => {
   let title = req.body.title
   let description = req.body.description
 
-  console.log(user)
+  console.log(myImg)
 
   // eslint-disable-next-line camelcase
   let new_post = new Post({
@@ -102,7 +112,7 @@ app.post('/posts', (req, res) => {
     description: description,
     user: user,
     comment: 'No comments',
-    image: thisisa.filename
+    image: myImg.name
   })
 
   new_post.save(function (error) {
