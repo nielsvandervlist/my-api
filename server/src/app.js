@@ -68,7 +68,7 @@ app.post('/upload', upload.array('file', 5), (req, res, next) => {
     if (err) return res.sendStatus(404)
     res.send({
       success: true,
-      message: 'Post saved successfully!'
+      message: 'Image loaded succesfully'
     })
   })
 })
@@ -104,7 +104,9 @@ app.post('/posts', (req, res) => {
   let title = req.body.title
   let description = req.body.description
 
-  console.log(myImg)
+  const image = new Image({
+    _id: new mongoose.Types.ObjectId()
+  })
 
   // eslint-disable-next-line camelcase
   let new_post = new Post({
@@ -112,7 +114,7 @@ app.post('/posts', (req, res) => {
     description: description,
     user: user,
     comment: 'No comments',
-    image: myImg.name
+    image: image._id
   })
 
   new_post.save(function (error) {
@@ -125,6 +127,12 @@ app.post('/posts', (req, res) => {
     })
   })
 })
+
+// Post.findOne({ title: 'Casino Royale' }).populate('image').exec(function (err, Post) {
+//   if (err) { console.log(err) }
+//   console.log('The author is %s', Post.image._id)
+//   // prints "The author is Ian Fleming"
+// })
 
 // Fetch all posts
 app.get('/posts', (req, res) => {
